@@ -16,7 +16,6 @@ import {
   useRpc,
   useSettings,
 } from "@get-bb/plugin-sdk/app";
-import { autoAnimate } from "@formkit/auto-animate";
 import { toast } from "sonner";
 import { Icon } from "./components/Icon";
 import { cn } from "./lib/utils";
@@ -116,13 +115,6 @@ function readChildExpansion(): Set<string> {
   } catch {
     return new Set();
   }
-}
-
-function useListAutoAnimate<T extends HTMLElement>() {
-  return useCallback((node: T | null) => {
-    if (!node || typeof window.matchMedia !== "function") return;
-    autoAnimate(node, { duration: 150, easing: "ease-out" });
-  }, []);
 }
 
 function suppressNextClick(threadId: string): void {
@@ -331,7 +323,6 @@ export function ThreadInbox({
   useRealtime(PROJECT_ICONS_CHANNEL, () => {
     setProjectIconRevision((revision) => revision + 1);
   });
-  const attachShelvesAutoAnimateRef = useListAutoAnimate<HTMLDivElement>();
   const activeThreadIdRef = useRef(activeThreadId);
   activeThreadIdRef.current = activeThreadId;
   const configuredSnoozePresets =
@@ -1076,7 +1067,7 @@ export function ThreadInbox({
               onNavigate={onNavigate}
             />
           ) : (
-            <div ref={attachShelvesAutoAnimateRef} className="flex flex-col">
+            <div className="flex flex-col">
               {pinned.length > 0 ? (
                 <CollapsibleShelf
                   label="Pinned"
@@ -1317,7 +1308,6 @@ function ParkedShelf({
   settledLimit?: number;
   onLoadMore?: () => void;
 }) {
-  const attachListAutoAnimateRef = useListAutoAnimate<HTMLUListElement>();
   if (threads.length === 0) return null;
   const now = Date.now();
   const limit =
@@ -1330,7 +1320,7 @@ function ParkedShelf({
       expanded={expanded}
       onToggle={onToggle}
     >
-      <ul ref={attachListAutoAnimateRef} className="flex flex-col gap-px">
+      <ul className="flex flex-col gap-px">
         {visibleThreads.map((thread) => (
           <SlimRow
             key={thread.id}
@@ -1429,10 +1419,8 @@ function ActiveProjectGroup({
   threadCount: number;
   children: React.ReactNode;
 }) {
-  const attachListAutoAnimateRef = useListAutoAnimate<HTMLUListElement>();
   return (
     <ul
-      ref={attachListAutoAnimateRef}
       aria-label={`${projectName} active threads`}
       className={cn(
         "flex flex-col gap-px",
@@ -1481,7 +1469,6 @@ function Shelf({
   label: string | null;
   children: React.ReactNode;
 }) {
-  const attachListAutoAnimateRef = useListAutoAnimate<HTMLUListElement>();
   return (
     // A named section is exposed as a landmark region; shelf rows stay in an
     // unnamed list beneath their collapsible heading.
@@ -1494,7 +1481,7 @@ function Shelf({
           <span className="h-px flex-1 bg-sidebar-border" />
         </h2>
       ) : null}
-      <ul ref={attachListAutoAnimateRef} className="flex flex-col gap-px">
+      <ul className="flex flex-col gap-px">
         {children}
       </ul>
     </section>

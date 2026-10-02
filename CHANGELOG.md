@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+### Fixed
+
+- Stop polling every thread row for layout changes. The sidebar no longer accumulates background timers across searches, shelf toggles, and sort changes, which kept the tab busy and grew its memory over time. Rows now appear, move, and leave instantly instead of sliding.
+
 ## [0.2.12] - 2026-09-12
 
 ### Fixed
